@@ -1,0 +1,35 @@
+
+(include "./modules/audiolevels.yuck")
+
+(include "./modules/variables.yuck")
+
+
+
+(include "./windows/onotify.yuck")
+
+
+(defvar popup "none")
+(defvar right_hover false)
+(defvar music_hover false)
+(defvar themer_hover false)
+(defvar music_open false)
+(defvar themer_open false)
+
+
+
+
+(defwidget right []
+  (box
+    :space-evenly false
+    :halign "end"
+    :valign "start"
+    :class "bar"
+    (editmode)
+    (themer)
+    ; (user)
+    (onotify-button)
+  )
+)
+
+
+

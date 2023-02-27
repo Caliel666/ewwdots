@@ -1,0 +1,100 @@
+(defwidget onotify []
+  (box
+    :class "onotify-window"
+    :orientation "v"
+    :space-evenly false
+    :style "${rev_ontf ? '' : 'margin-right: -533px;'}"
+    (eventbox
+      ; :onhoverlost "scripts/toggle-onotify.sh --close &"
+      (box
+        :orientation "v"
+        :space-evenly false
+
+        (scroll
+          ; :vscroll true
+          ; :hscroll false
+          ; :halign "fill"
+          :class "osettings-content"
+          :valign "fill"
+          :style "min-height: 400px;"
+          (box
+            :halign "fill"
+            :class "osettings-scroll-bg"
+            :space-evenly false
+            :spacing 20
+            :orientation "v"
+            ; Volume mixer
+            (box
+              :space-evenly false
+              :orientation "v"
+              ; :class "sliders"
+              (label
+                :halign "start"
+                :wrap true
+                :class "osettings-section"
+                :text "Volume mixer"
+              )
+              (for i in audiojson
+                (eventbox
+                  :onscroll "pactl set-sink-input-volume ${i.sink} $(echo {} | sed -e \"s/up/+10/g\" -e \"s/down/-10/g\")%"
+                  :onrightclick "pactl set-sink-input-volume ${i.sink} 100%"
+                  :onclick "pactl set-sink-input-volume ${i.sink} 0%"
+                  (box
+                    :space-evenly false
+                    :orientation "v"
+                    ; (label :class "time" :text "DEBUG:${i}")
+                    (centerbox
+                      :space-evenly false
+                      :orientation "h"
+                      ; :halign "center"
+                      (label
+                        :xalign 0
+                        :class "osettings-text"
+                        :limit-width 42
+                        :text "${i.name} (#${i.sink})"
+                      )
+                      (label
+                        :xalign 0
+                        :class "osettings-text"
+                        :limit-width 30
+                        :text ""
+                      )
+                      (box :orientation "v"
+                        (label
+                          :xalign 1
+                          :class "osettings-text"
+                          :text "${i.volume}%"
+                        )
+                      )
+                    )
+                    (scale
+                      :halign "fill"
+                      :class "osettings-slider"
+                      :value {i.volume}
+                      :onchange "pactl set-sink-input-volume ${i.sink} {}%"
+                      :tooltip "${i.name}: ${i.volume}%"
+                    )
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+)
+
+(defwindow onotify
+  :wm-ignore true
+  :monitor 0
+  ; :focusable true
+  :geometry (geometry
+    :x "0"
+    :y "53px"
+    :width "0px"
+    :height "400px"
+    :anchor "top right"
+  )
+  (onotify)
+)
